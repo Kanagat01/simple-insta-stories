@@ -78,36 +78,39 @@ class SlideStories {
         nextBtn.addEventListener('click', this.next)
         prevBtn.addEventListener('click', this.prev)
 
-        let startY = null;
-        let startX = null;
+        let x1 = null;
+        let y1 = null;
+        
+        let handleTouchStart = (event) => {
+            const firstTouch = event.touches[0];
+            x1 = firstTouch.clientX;
+            y1 = firstTouch.clientY;
+        }
 
-        document.addEventListener('touchstart', (event) => {
-            startY = event.touches[0].clientY;
-            startX = event.touches[0].clientX;
-        });
+        let handleTouchEnd = (event) => {
+            if (!x1 || !y1) return false;
 
-        document.addEventListener('touchmove', (event) => {
-            if (!startY && !startX) return;
-
-            let currentY = event.touches[0].clientY;
-            let currentX = event.touches[0].clientX;
-            let deltaY = currentY - startY;
-
-            if (deltaY > 25) {
-                console.log('Свайп вниз выполнен');
-                document.getElementById('modalOverlay').style.display = "none";
-                stories.forEach((el) => el.slide.style.display = "none")
-            } else if (startX - currentX > 25) {
-                this.prev()
-            } else if (currentX - startX > 25) {
-                this.next()
+            let x2 = event.changedTouches[0].clientX;
+            let y2 = event.changedTouches[0].clientY;
+            let xDiff = x2 - x1;
+            let yDiff = y2 - y1;
+        
+            if (Math.abs(xDiff) > Math.abs(yDiff)) {
+                if (xDiff > 0) {
+                    this.prev()
+                } else {
+                    this.next()
+                }
+            } else {
+                if (yDiff < 0) {
+                    document.getElementById('modalOverlay').style.display = "none";
+                    stories.forEach((el) => el.slide.style.display = "none")
+                }
             }
-            document.appendChild(`<h6> ${deltaY} ${startX - currentX} ${currentX - startX}</h6>`)
-            
-            startY = null;
-            startX = null;
-        });
+        }
 
+        this.slide.addEventListener('touchstart', handleTouchStart, false)
+        this.slide.addEventListener('touchend', handleTouchEnd, false)
     }
 
     addThumbItems() {
