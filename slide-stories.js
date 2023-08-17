@@ -102,6 +102,7 @@ class SlideStories {
             } else if (currentX - startX > 25) {
                 this.next()
             }
+            document.appendChild(`<h6> ${deltaY} ${startX - currentX} ${currentX - startX}</h6>`)
             
             startY = null;
             startX = null;
