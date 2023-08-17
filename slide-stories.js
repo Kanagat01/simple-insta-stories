@@ -93,13 +93,13 @@ class SlideStories {
             let currentX = event.touches[0].clientX;
             let deltaY = currentY - startY;
 
-            if (deltaY > 50) {
+            if (deltaY > 25) {
                 console.log('Свайп вниз выполнен');
                 document.getElementById('modalOverlay').style.display = "none";
                 stories.forEach((el) => el.slide.style.display = "none")
-            } else if (startX - currentX > 50) {
+            } else if (startX - currentX > 25) {
                 this.prev()
-            } else if (currentX - startX > 50) {
+            } else if (currentX - startX > 25) {
                 this.next()
             }
             
